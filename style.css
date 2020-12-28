@@ -1,0 +1,12 @@
+#container {
+  /*height: 800px;
+  width: 600px;
+  border: 1pt solid;
+  display: block;*/
+}
+
+#canvas {
+  background: #607D8B;
+  height: 400px;
+  width: 400px;
+}
