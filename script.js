@@ -272,8 +272,7 @@ function drawBoard() {
 
 drawBoard();
 
-function actuate(type){  
-  // Clear grid
+function clearGrid(){
   grid = [];
   for (var i = 0; i < gridSize; i++) {
     grid[i] = [];
@@ -283,6 +282,11 @@ function actuate(type){
       }
     }
   }
+}
+
+function actuate(type){  
+  // Clear grid
+  clearGrid()
 
   if (type === 'new walls'){
     console.log('new walls selected');
