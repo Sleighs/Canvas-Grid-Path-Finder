@@ -1,9 +1,13 @@
 
 
 var Game = {
+  grid: [],
+  gridSize: 8,
   shortestPath: null,
   startingWallCount: 10
 };
+
+
 
 // Start location will be in the following format:
 // [distanceFromTop, distanceFromLeft]
@@ -136,6 +140,29 @@ var exploreInDirection = function (currentLocation, direction, grid) {
   return newLocation;
 };
 
+function init(){
+  Game.grid = [];
+  Game.gridSize = 8;
+  Game.shortestPath = null;
+
+  for (var i = 0; i < Game.gridSize; i++) {
+    Game.grid[i] = [];
+    for (var j = 0; j < Game.gridSize; j++) {
+      Game.grid[i][j] = "Empty";
+    }
+  }
+  Game.grid[0][0] = "Start";
+  Game.grid[7][7] = "Goal";
+
+  getWalls(Game.startingWallCount);
+  console.log(findShortestPath([0, 0], Game.grid));
+
+  
+  //DrawWalls(Game.grid);
+  //DrawPath(Game.shortestPath);
+
+}
+
 // Create a 4x4 grid
 // Represent the grid as a 2-dimensional array
 var gridSize = 8;
@@ -151,29 +178,28 @@ grid[0][0] = "Start";
 grid[7][7] = "Goal";
 
 function getWalls(num){
-  var cells = [];
-  function getRand(size) {
-    return Math.floor(Math.random() * Math.floor(gridSize));
+  function getRand() {
+    return Math.floor(Math.random() * Math.floor(Game.gridSize));
   }
 
-  for (var i = 10; i > 0; i--){
-    var randomX = getRand(gridSize);
-    var randomY = getRand(gridSize);
+  for (var i = num; i > 0; i--){
+    //get random x and y
+    var randomX = getRand(Game.gridSize);
+    var randomY = getRand(Game.gridSize);
 
     //check to see if wall exists
     //check to see if path is blocked
-    if (grid[randomX][randomY] === "Start" || grid[randomX][randomY] === "Goal"){
+    if (Game.grid[randomX][randomY] === "Start" || Game.grid[randomX][randomY] === "Goal"){
       
     } else {
-      grid[randomX][randomY] = "Obstacle";
+      Game.grid[randomX][randomY] = "Obstacle";
     }
-
   }
-  //get random x and y
-  //wall already exists create new
+
+  //if wall already exists create new
 }
 
-getWalls(Game.startingWallCount)
+
 /*grid[0][5] = "Obstacle";
 grid[1][1] = "Obstacle";
 grid[1][2] = "Obstacle";
@@ -184,40 +210,40 @@ grid[3][7] = "Obstacle";
 grid[5][4] = "Obstacle";
 grid[7][4] = "Obstacle";*/
 
-console.log(findShortestPath([0, 0], grid));
+//console.log(findShortestPath([0, 0], Game.grid));
 console.log(Game.shortestPath);
 
-// Canvas
-var cellGrid = {x: gridSize, y: gridSize}
 
+
+// Canvas
+var cellGrid = {x: Game.gridSize, y: Game.gridSize};
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
 
-var walls = [];
-
+// Draw Walls
 function DrawWalls(grid){
-  for (var i = 0; i < gridSize; i++){
-    for (var j = 0; j < gridSize; j++){
-      if (grid[i][j] === "Obstacle"){
+  for (var i = 0; i < Game.gridSize; i++){
+    for (var j = 0; j < Game.gridSize; j++){
+      if (Game.grid[i][j] === "Obstacle"){
         console.log(i,j, 'wall detected');
 
         // Fill in obstacles
         var wall = canvas.getContext("2d");
-        var wx = (Math.floor((canvas.width - 2)/ cellGrid.x) * i) + i;
-        var wy = (Math.floor((canvas.height - 2)/ cellGrid.y) * j) + j;
+        var wx = (Math.floor((canvas.width - 2)/ cellGrid.x) * i) + i * .5;
+        var wy = (Math.floor((canvas.height - 2)/ cellGrid.y) * j) + j * .5;
         wall.fillStyle = "#FF0000";
         wall.fillRect(wx,wy,(canvas.width - 2)/cellGrid.x,(canvas.height - 2)/cellGrid.y);
         wall.stroke();
 
       }
 
-      if (grid[i][j] === "Goal") {
+      if (Game.grid[i][j] === "Goal") {
         console.log(i,j, 'goal reached');
 
         // Fill in path
         var goal = canvas.getContext("2d");
-        var gx = (Math.floor((canvas.width - 2)/ cellGrid.x) * i) + i;
-        var gy = (Math.floor((canvas.height - 2)/ cellGrid.y) * j) + j;
+        var gx = (Math.floor((canvas.width - 2)/ cellGrid.x) * i) + (i * .5);
+        var gy = (Math.floor((canvas.height - 2)/ cellGrid.y) * j) + (j * .5);
         goal.fillStyle = "#FFFF00";
         goal.fillRect(gx,gy,(canvas.width - 2)/cellGrid.x,(canvas.height - 2)/cellGrid.y);
         goal.stroke();
@@ -226,6 +252,7 @@ function DrawWalls(grid){
   }
 }
 
+// Draw shortest path
 function DrawPath(coordinates){
   if (coordinates === null){
     console.log('no path available')
@@ -240,20 +267,16 @@ function DrawPath(coordinates){
 
       // Fill in path
       var path = canvas.getContext("2d");
-      var px = (Math.floor((canvas.width - 2) / cellGrid.x) * x) + x;
-      var py = (Math.floor((canvas.height - 2)/ cellGrid.y) * y) + y;
+      var px = (Math.floor((canvas.width) / cellGrid.x) * x) + (x * .5);
+      var py = (Math.floor((canvas.height)/ cellGrid.y) * y) + (y * .5);
       path.fillStyle = "#00FF00";
       path.fillRect(px,py,(canvas.width - 2)/cellGrid.x,(canvas.height - 2)/cellGrid.y);
       path.stroke();
     });
 }
 
-DrawWalls(grid);
-DrawPath(Game.shortestPath);
-
 // Draw board
-
-function drawBoard() {
+function DrawBoard() {
   w = canvas.width - 2;
   for (var x = 1; x < canvas.width; x += w/cellGrid.x) {
     context.moveTo(x, 0);
@@ -270,44 +293,57 @@ function drawBoard() {
 }
 
 
-drawBoard();
-
 function clearGrid(){
   grid = [];
   for (var i = 0; i < gridSize; i++) {
     grid[i] = [];
     for (var j = 0; j < gridSize; j++) {
-      if (grid[i][j] !== "Start" || grid[i][j] !== "Goal"){
-        grid[i][j] = "Empty";
-      }
+      grid[i][j] = "Empty";
     }
   }
+
+  DrawWalls(grid)
+
 }
 
 function actuate(type){  
   // Clear grid
-  clearGrid()
+  if (type === 'clear grid'){
+    console.log('grid cleared');
+    clearGrid();
+    DrawWalls(Game.grid);
+    return;
+  } else {
+    clearGrid();
+  }
 
+  grid[0][0] = "Start";
+  grid[7][7] = "Goal";
+
+  // Get new walls
   if (type === 'new walls'){
     console.log('new walls selected');
-    grid = [];
+    Game.grid = [];
     for (var i = 0; i < gridSize; i++) {
-      grid[i] = [];
+      Game.grid[i] = [];
       for (var j = 0; j < gridSize; j++) {
-        grid[i][j] = "Empty";
+        Game.grid[i][j] = "Empty";
       }
     }
     
     getWalls(Game.startingWallCount);
     
   }
-  
-  grid[0][0] = "Start";
-  grid[7][7] = "Goal";
+  DrawWalls(Game.grid);
 
+  //Draw new path
   Game.shortestPath = null;
-
-  findShortestPath([0, 0], grid);
-  DrawWalls(grid);
+  console.log(findShortestPath([0, 0], Game.grid));
   DrawPath(Game.shortestPath);
 }
+
+init();
+
+DrawWalls(Game.grid);
+DrawPath(Game.shortestPath);
+DrawBoard();
