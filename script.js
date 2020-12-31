@@ -1,5 +1,4 @@
 
-
 var Game = {
   grid: [],
   gridSize: 8,
@@ -75,9 +74,6 @@ var findShortestPath = function (startCoordinates, grid) {
 };
 
 // This function will check a location's status
-// (a location is "valid" if it is on the grid, is not an "obstacle",
-// and has not yet been visited by our algorithm)
-// Returns "Valid", "Invalid", "Blocked", or "Goal"
 var locationStatus = function (location, grid) {
   var gridSize = grid.length;
   var dft = location.distanceFromTop;
@@ -101,8 +97,7 @@ var locationStatus = function (location, grid) {
   }
 };
 
-// Explores the grid from the given location in the given
-// direction
+// Explores the grid from the given location in the given direction
 var exploreInDirection = function (currentLocation, direction, grid) {
   var newPath = currentLocation.path.slice();
   newPath.push(direction);
@@ -161,21 +156,25 @@ function init(){
   //DrawWalls(Game.grid);
   //DrawPath(Game.shortestPath);
 
+
+  new GameManager(Game.grid, Game.gridSize, Game.startingWallCount);
 }
 
 // Create a 4x4 grid
 // Represent the grid as a 2-dimensional array
-var gridSize = 8;
+/*var gridSize = 8;
 var grid = [];
+
 for (var i = 0; i < gridSize; i++) {
   grid[i] = [];
   for (var j = 0; j < gridSize; j++) {
     grid[i][j] = "Empty";
   }
 }
-
 grid[0][0] = "Start";
 grid[7][7] = "Goal";
+*/
+
 
 function getWalls(num){
   function getRand() {
@@ -260,8 +259,6 @@ function DrawPath(coordinates){
   }
 
   coordinates.forEach((ele)=>{
-      console.log(ele[0], ele[1]);
-
       var x = ele[0];
       var y = ele[1];
 
@@ -272,6 +269,8 @@ function DrawPath(coordinates){
       path.fillStyle = "#00FF00";
       path.fillRect(px,py,(canvas.width - 2)/cellGrid.x,(canvas.height - 2)/cellGrid.y);
       path.stroke();
+
+      console.log(ele[0], ele[1]);
     });
 }
 
@@ -342,7 +341,7 @@ function actuate(type){
   DrawPath(Game.shortestPath);
 }
 
-init();
+//init();
 
 DrawWalls(Game.grid);
 DrawPath(Game.shortestPath);

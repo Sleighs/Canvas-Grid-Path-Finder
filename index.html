@@ -11,15 +11,12 @@
 <div id='container'>
   <canvas id='canvas'></canvas>
   <div id='input-container'>
-    <button onclick="actuate('new walls')">new walls</button>
-    <button onclick="actuate('clear grid')">clear grid</button>
-    <button onclick="actuate('new grid')">new path</button>
-    <button onclick="init()">new grid</button>
-    <!--<input type="number" maxlength="32">-->
+    <button onclick="Board.clearGrid('new grid')">clear</button>
+    <button onclick="GameManager.init()">new</button>
   </div>
 </div>
 
-  <script  src="./script.js"></script>
-
+  <script  src="./app.js"></script>
+  
 </body>
 </html>
