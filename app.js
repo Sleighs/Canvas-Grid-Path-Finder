@@ -178,12 +178,20 @@ var Board = {
       
           //check to see if wall exists
           //check to see if path is blocked
-          if (GameManager.grid[randomX][randomY] === "Start" || GameManager.grid[randomX][randomY] === "Goal"){
+          if (newGrid[randomX][randomY] === "Start" || newGrid[randomX][randomY] === "Goal"){
             
           } else {
-            GameManager.grid[randomX][randomY] = "Obstacle";
+            newGrid[randomX][randomY] = "Obstacle";
           }
         }
+
+        GameManager.grid = newGrid;
+
+
+        var path = Path.findShortestPath([0, 0], GameManager.grid);
+        this.shortestPath = path;
+        
+
 
         //console.log(GameManager.grid);
       
@@ -204,6 +212,19 @@ var Board = {
               wall.stroke();
       
             }
+
+            if (grid[i][j] === "Empty"){
+                //console.log(i,j, 'wall detected');
+        
+                // Fill in obstacles
+                var wall = canvas.getContext("2d");
+                var wx = (Math.floor((canvas.width - 2)/ this.cellGrid.x) * i) + i * .5;
+                var wy = (Math.floor((canvas.height - 2)/ this.cellGrid.y) * j) + j * .5;
+                wall.fillStyle = "#607D8B";
+                wall.fillRect(wx, wy, (canvas.width - 2)/this.cellGrid.x,(canvas.height - 2)/this.cellGrid.y);
+                wall.stroke();
+        
+              }
       
             if (grid[i][j] === "Goal") {
               //console.log(i,j, 'goal reached');
@@ -266,10 +287,9 @@ var Board = {
           }
         }
 
-      GameManager.grid = grid;
+        GameManager.grid = grid;
 
         Board.drawWalls(grid)
-      
       }
 
 };
