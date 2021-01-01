@@ -1,10 +1,22 @@
 var GameManager = {
     grid: [],
-    gridSize: 10,
+    gridSize: 12,
     gridWidth: null,
     gridHeight: null,
     walls: [],
+    startingWallCount: 23,
     shortestPath: [],
+    startLocation: [1, 1],
+    endLocation: [10, 10],
+    getStart: function(){
+        var start = document.getElementById('start-location-input').value;
+        console.log('get start', start)
+        GameManager.startLocation = [0,0];
+        GameManager.grid[this.startLocation[0], this.startLocation[1]] = "Start";
+    },
+    getEnd: function(){
+        GameManager.grid[this.endLocation[0], this.endLocation[1]] = "Goal";
+    },
     init: function(){
         var newGrid = [];
         for (var i = 0; i < this.gridSize; i++) {
@@ -14,20 +26,19 @@ var GameManager = {
             }
         }
 
-        newGrid[0][0] = "Start";
-        newGrid[9][7] = "Goal";
+        newGrid[this.startLocation[0]][this.startLocation[1]] = "Start";
+        newGrid[this.endLocation[0]][this.endLocation[1]] = "Goal";
 
+        Board.clearGrid();
         GameManager.grid = newGrid;
-        Board.drawWalls(GameManager.grid);
-    
-        Board.getWalls(10);
+        Board.getWalls(this.startingWallCount);
 
-        var path = Path.findShortestPath([0, 0], GameManager.grid);
+        var path = Path.findShortestPath([this.startLocation[0], this.startLocation[1]], GameManager.grid);
         this.path = path;
         
         Board.drawBoard(GameManager.grid);
-        Board.drawWalls(GameManager.grid);
         Board.drawPath(this.shortestPath);
+        Board.drawWalls(GameManager.grid);
 
         console.log('GameManager', GameManager);
     }
@@ -51,7 +62,7 @@ var Path = {
         // Initialize the queue with the start location already inside
         var queue = [location];
       
-        // Loop through the grid searching for the goal
+        // Loop through the grid until goal is reached
         while (queue.length > 0) {
           // Take the first location off the queue
           var currentLocation = queue.shift();
@@ -167,32 +178,26 @@ var Board = {
         }
       
         for (var i = num; i > 0; i--){
-          //get random x and y
+          // Get random x and y
           var randomX = getRand(GameManager.gridSize);
           var randomY = getRand(GameManager.gridSize);
       
-          //check to see if wall exists
-          //check to see if path is blocked
+          // Check to see if path is blocked
           if (newGrid[randomX][randomY] === "Start" || newGrid[randomX][randomY] === "Goal"){
             
           } else {
             newGrid[randomX][randomY] = "Obstacle";
+            GameManager.walls.push([randomX,randomY])
           }
         }
 
         GameManager.grid = newGrid;
 
-
-        var path = Path.findShortestPath([0, 0], GameManager.grid);
-        this.shortestPath = path;
-        
-
-
-        //console.log(GameManager.grid);
-      
-        //if wall already exists create new
+        //var path = Path.findShortestPath([0, 0], GameManager.grid);
+        //GameManager.shortestPath = path;
     },
     drawWalls: function(grid){
+        var canvas = this.canvas;
         for (var i = 0; i < GameManager.gridSize; i++){
           for (var j = 0; j < GameManager.gridSize; j++){
             if (grid[i][j] === "Obstacle"){
@@ -200,10 +205,10 @@ var Board = {
       
               // Fill in obstacles
               var wall = canvas.getContext("2d");
-              var wx = (Math.floor((canvas.width)/ this.cellGrid.x) * i);
-              var wy = (Math.floor((canvas.height)/ this.cellGrid.y) * j);
-              wall.fillStyle = "#FF0000";
-              wall.fillRect(wx, wy, (canvas.width - 2)/this.cellGrid.x,(canvas.height - 2)/this.cellGrid.y);
+              var wx = (Board.canvas.width/ this.cellGrid.x) * i;
+              var wy = (Board.canvas.height/ this.cellGrid.y) * j;
+              wall.fillStyle = "#E57373";
+              wall.fillRect(wx, wy, (Board.canvas.width - 2)/this.cellGrid.x,(Board.canvas.height - 2)/this.cellGrid.y);
               wall.stroke();
       
             }
@@ -213,23 +218,35 @@ var Board = {
         
                 // Fill in obstacles
                 var wall = canvas.getContext("2d");
-                var wx = (Math.floor((canvas.width)/ this.cellGrid.x) * i);
-                var wy = (Math.floor((canvas.height)/ this.cellGrid.y) * j);
+                var wx = ((canvas.width)/ this.cellGrid.x) * i;
+                var wy = ((canvas.height)/ this.cellGrid.y) * j;
                 wall.fillStyle = "#607D8B";
                 wall.fillRect(wx, wy, (canvas.width - 2)/this.cellGrid.x,(canvas.height - 2)/this.cellGrid.y);
                 wall.stroke();
         
               }
-      
+              
+            if (grid[i][j] === "Start") {
+                //console.log(i,j, 'goal reached');
+        
+                // Fill in path
+                var start = canvas.getContext("2d");
+                var sx = (Board.canvas.width / this.cellGrid.x) * i;
+                var sy = (Board.canvas.height/ this.cellGrid.y) * j;
+                start.fillStyle = "aqua";
+                start.fillRect(sx,sy,(canvas.width - 2)/ this.cellGrid.x,(canvas.height - 2)/this.cellGrid.y);
+                start.stroke();
+              }
+
             if (grid[i][j] === "Goal") {
               //console.log(i,j, 'goal reached');
       
               // Fill in path
               var goal = canvas.getContext("2d");
-              var gx = (Math.floor((canvas.width )/ this.cellGrid.x) * i);
-              var gy = (Math.floor((canvas.height)/ this.cellGrid.y) * j);
+              var gx = (Board.canvas.width / this.cellGrid.x) * i;
+              var gy = (Board.canvas.height/ this.cellGrid.y) * j;
               goal.fillStyle = "#FFFF00";
-              goal.fillRect(gx,gy,(canvas.width - 2)/ this.cellGrid.x,(canvas.height - 2)/this.cellGrid.y);
+              goal.fillRect(gx,gy,(Board.canvas.width - 2)/ this.cellGrid.x,(Board.canvas.height - 2)/this.cellGrid.y);
               goal.stroke();
             }
           }
@@ -247,20 +264,18 @@ var Board = {
       
             // Fill in path
             var path = canvas.getContext("2d");
-            var px = (Math.floor((canvas.width) / this.cellGrid.x) * x);
-            var py = (Math.floor((canvas.height)/ this.cellGrid.y) * y);
-            path.fillStyle = "#00FF00";
-            path.fillRect(px,py,(canvas.width - 2)/this.cellGrid.x,(canvas.height - 2)/this.cellGrid.y);
+            var px = (Board.canvas.width / this.cellGrid.x) * x;
+            var py = (Board.canvas.height/ this.cellGrid.y) * y;
+            path.fillStyle = "#00E676";
+            path.fillRect(px,py,(Board.canvas.width - 2)/this.cellGrid.x,(Board.canvas.height - 2)/this.cellGrid.y);
             path.stroke();
-      
-            console.log(ele[0], ele[1]);
           });
       },
       drawBoard: function() {
-        console.log('canvas h x w', this.canvas.height, this.canvas.width);
+        //console.log('canvas h x w', this.canvas.height, this.canvas.width);
         var context = Board.canvas.getContext('2d');
         var w = Board.canvas.width - 2;
-        for (var x = 1; x < Board.canvas.width; x += w/this.cellGrid.x) {
+        for (var x = 1; x < Board.canvas.width; x += w/this.cellGrid.x ) {
           context.moveTo(x, 0);
           context.lineTo(x, 400);
         }
@@ -270,7 +285,9 @@ var Board = {
           context.moveTo(0, y);
           context.lineTo(400, y);
         }
-      
+        
+        context.lineWidth = 2;
+        context.strokeStyle = "white";
         context.stroke();
       },
       clearGrid: function(){
@@ -285,6 +302,10 @@ var Board = {
         GameManager.grid = grid;
 
         Board.drawWalls(grid)
+      },
+      clearPath: function(){
+          var grid = GameManager.grid;
+          console.log(grid);
       }
 
 };

@@ -7,8 +7,8 @@
 
 #canvas {
   background: #607D8B;
-  height: 400px;
-  width: 400px;
+  height: 90vh; /*400px*/
+  width: 90vw;
   display: block;
   margin: auto;
 }

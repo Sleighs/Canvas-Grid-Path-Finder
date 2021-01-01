@@ -11,8 +11,17 @@
 <div id='container'>
   <canvas id='canvas'></canvas>
   <div id='input-container'>
-    <button onclick="Board.clearGrid('new grid')">clear</button>
-    <button onclick="GameManager.init()">new</button>
+    <button onclick="Board.clearGrid('new grid')">clear grid</button>
+    <button onclick="Board.clearPath()">clear path</button>
+    <button onclick="GameManager.init()">new board</button>
+    <div>
+      start x
+      <input id='start-location-inputx' type="number" name="start-x" value="0" min="0" max="100" step="1">
+      start y
+      <input id='start-location-inputy' type="number" name="start-y" value="0" min="0" max="100" step="1">
+    </div>
+    
+    
   </div>
 </div>
 
