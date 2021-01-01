@@ -5,14 +5,6 @@ var GameManager = {
     gridHeight: null,
     walls: [],
     shortestPath: [],
-    setup: function(grid, gridSize, walls){
-        //make walls 
-        //make grid
-        //set path end points
-        //draw board
-        //draw walls
-        //get shortest path between points
-    },
     init: function(){
         var newGrid = [];
         for (var i = 0; i < this.gridSize; i++) {
@@ -23,9 +15,10 @@ var GameManager = {
         }
 
         newGrid[0][0] = "Start";
-        newGrid[7][7] = "Goal";
+        newGrid[9][7] = "Goal";
 
         GameManager.grid = newGrid;
+        Board.drawWalls(GameManager.grid);
     
         Board.getWalls(10);
 
@@ -35,6 +28,8 @@ var GameManager = {
         Board.drawBoard(GameManager.grid);
         Board.drawWalls(GameManager.grid);
         Board.drawPath(this.shortestPath);
+
+        console.log('GameManager', GameManager);
     }
 };
 
@@ -43,8 +38,8 @@ var Path = {
         var distanceFromTop = startCoordinates[0];
         var distanceFromLeft = startCoordinates[1];
       
-        // Each "location" will store its coordinates
-        // and the shortest path required to arrive there
+        // Each "location" will store its coordinates 
+          // and the shortest path required to arrive there
         var location = {
           distanceFromTop: distanceFromTop,
           distanceFromLeft: distanceFromLeft,
@@ -205,8 +200,8 @@ var Board = {
       
               // Fill in obstacles
               var wall = canvas.getContext("2d");
-              var wx = (Math.floor((canvas.width - 2)/ this.cellGrid.x) * i) + i * .5;
-              var wy = (Math.floor((canvas.height - 2)/ this.cellGrid.y) * j) + j * .5;
+              var wx = (Math.floor((canvas.width)/ this.cellGrid.x) * i);
+              var wy = (Math.floor((canvas.height)/ this.cellGrid.y) * j);
               wall.fillStyle = "#FF0000";
               wall.fillRect(wx, wy, (canvas.width - 2)/this.cellGrid.x,(canvas.height - 2)/this.cellGrid.y);
               wall.stroke();
@@ -218,8 +213,8 @@ var Board = {
         
                 // Fill in obstacles
                 var wall = canvas.getContext("2d");
-                var wx = (Math.floor((canvas.width - 2)/ this.cellGrid.x) * i) + i * .5;
-                var wy = (Math.floor((canvas.height - 2)/ this.cellGrid.y) * j) + j * .5;
+                var wx = (Math.floor((canvas.width)/ this.cellGrid.x) * i);
+                var wy = (Math.floor((canvas.height)/ this.cellGrid.y) * j);
                 wall.fillStyle = "#607D8B";
                 wall.fillRect(wx, wy, (canvas.width - 2)/this.cellGrid.x,(canvas.height - 2)/this.cellGrid.y);
                 wall.stroke();
@@ -231,8 +226,8 @@ var Board = {
       
               // Fill in path
               var goal = canvas.getContext("2d");
-              var gx = (Math.floor((canvas.width - 2)/ this.cellGrid.x) * i) + (i * .5);
-              var gy = (Math.floor((canvas.height - 2)/ this.cellGrid.y) * j) + (j * .5);
+              var gx = (Math.floor((canvas.width )/ this.cellGrid.x) * i);
+              var gy = (Math.floor((canvas.height)/ this.cellGrid.y) * j);
               goal.fillStyle = "#FFFF00";
               goal.fillRect(gx,gy,(canvas.width - 2)/ this.cellGrid.x,(canvas.height - 2)/this.cellGrid.y);
               goal.stroke();
@@ -252,8 +247,8 @@ var Board = {
       
             // Fill in path
             var path = canvas.getContext("2d");
-            var px = (Math.floor((canvas.width) / this.cellGrid.x) * x) + (x * .5);
-            var py = (Math.floor((canvas.height)/ this.cellGrid.y) * y) + (y * .5);
+            var px = (Math.floor((canvas.width) / this.cellGrid.x) * x);
+            var py = (Math.floor((canvas.height)/ this.cellGrid.y) * y);
             path.fillStyle = "#00FF00";
             path.fillRect(px,py,(canvas.width - 2)/this.cellGrid.x,(canvas.height - 2)/this.cellGrid.y);
             path.stroke();
