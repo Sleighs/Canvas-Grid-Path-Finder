@@ -41,7 +41,50 @@ var GameManager = {
         Board.drawWalls(GameManager.grid);
 
         console.log('GameManager', GameManager);
+    },
+    getPath: function(){
+        var path = Path.findShortestPath([this.startLocation[0], this.startLocation[1]], GameManager.grid);
+
+    },
+    updateEndPoints: function(){
+        var sx = document.getElementById("start-location-inputx").value;
+        var sy = document.getElementById("start-location-inputy").value;
+        var gx = document.getElementById("end-location-inputx").value;
+        var gy = document.getElementById("end-location-inputy").value;
+        var sxMax = document.getElementById("start-location-inputx").maxLength;
+        var syMax = document.getElementById("start-location-inputy").maxLength;
+        var gxMax = document.getElementById("end-location-inputx").maxLength;
+        var gyMax = document.getElementById("end-location-inputy").maxLength;
+
+        sxMax = GameManager.gridSize - 1;
+        syMax = GameManager.gridSize - 1;
+        gxMax = GameManager.gridSize - 1;
+        gyMax = GameManager.gridSize - 1;
+
+        this.startLocation = [sx, sy];
+        this.endLocation = [gx, gy];
+        
+        if (this.startLocation === this.endLocation){
+            console.log('endpoints are the same');
+            return;
+        }
+
+        GameManager.grid[sx, sy] = "Start";
+        GameManager.grid[gx, gy] = "Goal";
+
+        var sxText = document.getElementById("start-x-text");
+        var syText = document.getElementById("start-y-text");
+        sxText.value = this.startLocation[0];
+        syText = this.startLocation[1];
+
+        
+
+        console.log('endpoints updated', this.startLocation, this.endLocation)
+    },
+    actuator: function(){
+        
     }
+
 };
 
 var Path = {
@@ -66,6 +109,8 @@ var Path = {
         while (queue.length > 0) {
           // Take the first location off the queue
           var currentLocation = queue.shift();
+
+          // Set to explore the direction closest to the end location first
       
           // Explore North
           var newLocation = this.exploreInDirection(currentLocation, "North", grid);
@@ -298,6 +343,8 @@ var Board = {
             grid[i][j] = "Empty";
           }
         }
+        grid[GameManager.startLocation[0]][GameManager.startLocation[1]] = "Start";
+        grid[GameManager.endLocation[0]][GameManager.endLocation[1]] = "Goal";
 
         GameManager.grid = grid;
 
@@ -307,6 +354,7 @@ var Board = {
           var grid = GameManager.grid;
           console.log(grid);
       }
+      
 
 };
 

@@ -14,12 +14,20 @@
     <button onclick="Board.clearGrid('new grid')">clear grid</button>
     <button onclick="Board.clearPath()">clear path</button>
     <button onclick="GameManager.init()">new board</button>
-    <div>
+    <!--<div>
       start x
-      <input id='start-location-inputx' type="number" name="start-x" value="0" min="0" max="100" step="1">
+      <input id='start-location-inputx' type="number" name="start-x" value="0" min="0" max="100" step="1" onchange="GameManager.updateEndPoints()">
+      <span id="start-x-text"></span>
       start y
-      <input id='start-location-inputy' type="number" name="start-y" value="0" min="0" max="100" step="1">
+      <input id='start-location-inputy' type="number" name="start-y" value="0" min="0" max="100" step="1" onchange="GameManager.updateEndPoints()">
+      <span id="start-y-text"></span>
     </div>
+    <div>
+      end x
+      <input id='end-location-inputx' type="number" name="end-x" value="10" min="0" max="100" step="1" onchange="GameManager.updateEndPoints()">
+      end y
+      <input id='end-location-inputy' type="number" name="end-y" value="10" min="0" max="100" step="1" onchange="GameManager.updateEndPoints()">
+    </div>-->
     
     
   </div>

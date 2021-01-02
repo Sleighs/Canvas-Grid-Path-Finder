@@ -3,6 +3,7 @@
   width: 100vw;
   /*border: 1pt solid;*/
   display: block;
+  padding: 10;
 }
 
 #canvas {
