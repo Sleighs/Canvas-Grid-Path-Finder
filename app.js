@@ -84,7 +84,6 @@ var GameManager = {
     actuator: function(){
         
     }
-
 };
 
 var Path = {
