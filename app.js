@@ -41,6 +41,8 @@ var GameManager = {
         Board.drawWalls(GameManager.grid);
 
         console.log('GameManager', GameManager);
+
+        Board.canvas.addEventListener('click', (e)=>{handleClick(e)});
     },
     getPath: function(){
         var path = Path.findShortestPath([this.startLocation[0], this.startLocation[1]], GameManager.grid);
@@ -111,6 +113,12 @@ var Path = {
 
           // Set to explore the direction closest to the end location first
       
+          
+      
+          
+      
+          
+
           // Explore North
           var newLocation = this.exploreInDirection(currentLocation, "North", grid);
           if (newLocation.status === "Goal") {
@@ -119,16 +127,16 @@ var Path = {
           } else if (newLocation.status === "Valid") {
             queue.push(newLocation);
           }
-      
-          // Explore East
-          var newLocation = this.exploreInDirection(currentLocation, "East", grid);
+          
+          // Explore West
+          var newLocation = this.exploreInDirection(currentLocation, "West", grid);
           if (newLocation.status === "Goal") {
             GameManager.shortestPath = newLocation.pathCoordinates;
             return newLocation;
           } else if (newLocation.status === "Valid") {
             queue.push(newLocation);
           }
-      
+          
           // Explore South
           var newLocation = this.exploreInDirection(currentLocation, "South", grid);
           if (newLocation.status === "Goal") {
@@ -138,8 +146,8 @@ var Path = {
             queue.push(newLocation);
           }
       
-          // Explore West
-          var newLocation = this.exploreInDirection(currentLocation, "West", grid);
+          // Explore East
+          var newLocation = this.exploreInDirection(currentLocation, "East", grid);
           if (newLocation.status === "Goal") {
             GameManager.shortestPath = newLocation.pathCoordinates;
             return newLocation;
@@ -307,12 +315,17 @@ var Board = {
             var y = ele[1];
       
             // Fill in path
-            var path = canvas.getContext("2d");
-            var px = (Board.canvas.width / this.cellGrid.x) * x;
-            var py = (Board.canvas.height/ this.cellGrid.y) * y;
-            path.fillStyle = "#00E676";
-            path.fillRect(px,py,(Board.canvas.width - 2)/this.cellGrid.x,(Board.canvas.height - 2)/this.cellGrid.y);
-            path.stroke();
+            if (GameManager.grid[x][y] !== "Start"){
+                var path = canvas.getContext("2d");
+                var px = (Board.canvas.width / this.cellGrid.x) * x;
+                var py = (Board.canvas.height/ this.cellGrid.y) * y;
+                path.fillStyle = "#00E676";
+                path.fillRect(px,py,(Board.canvas.width - 2)/this.cellGrid.x,(Board.canvas.height - 2)/this.cellGrid.y);
+                path.stroke();
+
+                // Set value to 'Path'
+                GameManager.grid[x][y] = "Path"
+            }
           });
       },
       drawBoard: function() {
@@ -358,3 +371,38 @@ var Board = {
 };
 
 GameManager.init();
+
+window.onload = function() {
+    
+}
+function getMousePos(canvas, event){
+    var rect = canvas.getBoundingClientRect();
+    return ({
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+    })
+}
+function handleClick(){
+    var position = getMousePos(Board.canvas, event)
+    console.log(position);
+
+    var clickedCell = {
+        x: Math.floor(position.x / (Board.canvas.width / GameManager.gridSize)), 
+        y: Math.floor(position.y/ (Board.canvas.height / GameManager.gridSize))
+    }
+
+    if (GameManager.clickedCell === clickedCell){
+        GameManager.clickedCell = null;
+    } else if (GameManager.clickedCell === null || GameManager.clickedCell !== clickedCell){
+        GameManager.clickedCell = clickedCell;
+    } 
+
+    console.log('clicked cell', GameManager.clickedCell, 'grid:', GameManager.grid[clickedCell.x][clickedCell.y]);
+    //get grid location
+}
+
+
+/*
+
+
+*/
