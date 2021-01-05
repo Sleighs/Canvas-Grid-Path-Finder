@@ -321,13 +321,13 @@ var Board = {
         var w = Board.canvas.width - 2;
         for (var x = 1; x < Board.canvas.width; x += w/this.cellGrid.x ) {
           context.moveTo(x, 0);
-          context.lineTo(x, 400);
+          context.lineTo(x, 504);
         }
         
         var h = Board.canvas.height - 2;
         for (var y = 1; y < Board.canvas.height; y += h/this.cellGrid.y) {
           context.moveTo(0, y);
-          context.lineTo(400, y);
+          context.lineTo(504, y);
         }
         
         context.lineWidth = 2;
