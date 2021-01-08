@@ -11,8 +11,13 @@
 <div id='container'>
   <canvas id='canvas' height="504" width="504"></canvas>
   <div id='input-container'>
-    <button onclick="Board.clearGrid('new grid')">clear grid</button>
-    <button onclick="GameManager.init()">new board</button>
+    <button onclick="Board.clearGrid()">clear grid</button>
+    <button onclick="Board.clearPath()">clear path</button>
+    <button onclick="Board.drawPath(GameManager.shortestPath)">new path</button>
+    <button onclick="GameManager.newBoard()">new board</button>
+    <button onclick="setInterval(()=>{Board.drawEnemy()}, 100)">animate</button>
+    <button onclick="clearInterval()" disabled>clear animation</button>
+
     <!--<button onclick="Board.clearPath()">clear path</button>
       <div>
       start x
