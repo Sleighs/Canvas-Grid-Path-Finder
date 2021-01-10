@@ -10,8 +10,12 @@ var GameManager = {
     endLocation: [10, 10],
     getStart: function(){
         var start = document.getElementById('start-location-input').value;
-        console.log('get start', start)
-        //GameManager.startLocation = [0,0];
+        //console.log('get start', start)
+
+        if (GameManager.startLocation === null){
+          GameManager.startLocation = [1, 1];
+        }
+        
         GameManager.grid[this.startLocation[0], this.startLocation[1]] = "Start";
         Board.getEnemyStart();
     },
