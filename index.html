@@ -15,8 +15,8 @@
     <button onclick="Board.clearPath()">clear path</button>
     <button onclick="Board.drawPath(GameManager.shortestPath)">new path</button>
     <button onclick="GameManager.newBoard()">new board</button>
-    <button onclick="setInterval(()=>{Board.drawEnemy()}, 100)">animate</button>
-    <button onclick="clearInterval()" disabled>clear animation</button>
+    <button onclick="enemyInterval = setInterval(()=>{Board.drawEnemy()}, 100)">animate</button>
+    <button onclick="clearInterval(enemyInterval)">clear animation</button>
 
     <!--<button onclick="Board.clearPath()">clear path</button>
       <div>

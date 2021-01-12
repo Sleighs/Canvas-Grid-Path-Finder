@@ -136,6 +136,7 @@ var GameManager = {
     }
 };
 
+
 var Path = {
   findShortestPath: function (startCoordinates, grid) {
     var distanceFromTop = startCoordinates[0];
@@ -261,6 +262,7 @@ var Path = {
     return newLocation;
   }
 };
+
 
 var Board = {
     canvas: document.getElementById('canvas'),
@@ -426,13 +428,14 @@ var Board = {
       },
       enemyX: null,
       enemyY: null,
-      getEnemyStart:function(){
+      getEnemyStart: function(){
           var x = (Board.canvas.width / Board.cellGrid.x) * GameManager.startLocation[0];
           var y = (Board.canvas.height/ Board.cellGrid.y) * GameManager.startLocation[1];
           Board.enemyX = x + ((Board.canvas.width / Board.cellGrid.x)/2);
           Board.enemyY = y + ((Board.canvas.width / Board.cellGrid.y)/2);
       },
       drawEnemy: function (){
+        
         var context = canvas.getContext('2d');
 
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -442,12 +445,12 @@ var Board = {
         Board.drawWalls(GameManager.grid);
 
         Board.animateEnemy(Board.enemyX, Board.enemyY, context);
-
+        
         Board.enemyX = Board.enemyX + 1; //Board.canvas.width / Board.cellGrid.x;
         Board.enemyY = Board.enemyY + 1; //Board.canvas.width / Board.cellGrid.y;
       },
       pauseEnemy: function(){
-        clearInterval();
+        clearInterval(GameManager.enemyInterval);
       },
       animateEnemy: function (x, y, ctx){
         ctx.beginPath();
@@ -511,12 +514,13 @@ function handleClick(){
 
     GameManager.grid = newGrid;
     Board.clearGrid("new path");
-    
-    GameManager.getPath();
-
     Board.drawBoard();
-    Board.drawPath(GameManager.shortestPath);
     Board.drawWalls(GameManager.grid);
 
+    GameManager.getPath();
+    Board.drawPath(GameManager.shortestPath);
+    
     console.log('clicked cell', GameManager.clickedCell, 'grid:', GameManager.grid[clickedCell.x][clickedCell.y]);
 }
+
+var enemyInterval;
