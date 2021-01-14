@@ -446,8 +446,8 @@ var Board = {
 
         Board.animateEnemy(Board.enemyX, Board.enemyY, context);
         
-        Board.enemyX = Board.enemyX + 1; //Board.canvas.width / Board.cellGrid.x;
-        Board.enemyY = Board.enemyY + 1; //Board.canvas.width / Board.cellGrid.y;
+        Board.enemyX = Board.enemyX + 1; 
+        Board.enemyY = Board.enemyY + 1; 
       },
       pauseEnemy: function(){
         clearInterval(GameManager.enemyInterval);
@@ -513,6 +513,7 @@ function handleClick(){
     }
 
     GameManager.grid = newGrid;
+
     Board.clearGrid("new path");
     Board.drawBoard();
     Board.drawWalls(GameManager.grid);
